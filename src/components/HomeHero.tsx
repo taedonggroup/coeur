@@ -2,21 +2,19 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { HandwritingLogo } from "./HandwritingLogo";
-
-const REVEAL_DURATION = 2.6;
-const REVEAL_DELAY = 0.4;
-const AFTER_REVEAL = REVEAL_DURATION + REVEAL_DELAY;
+import { HandwritingLogo, HANDWRITING_TOTAL_S } from "./HandwritingLogo";
 
 export function HomeHero() {
+  const after = HANDWRITING_TOTAL_S; // ≈ 3.25s
+
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-24 pb-16">
-      <HandwritingLogo duration={REVEAL_DURATION} delay={REVEAL_DELAY} />
+      <HandwritingLogo />
 
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.0, delay: AFTER_REVEAL + 0.1, ease: "easeOut" }}
+        transition={{ duration: 1.0, delay: after + 0.15, ease: "easeOut" }}
         className="mt-2 sm:mt-6 max-w-xl text-center"
       >
         <p className="font-display italic text-2xl sm:text-3xl text-white/85 leading-snug">
@@ -30,7 +28,7 @@ export function HomeHero() {
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: AFTER_REVEAL + 0.7, ease: "easeOut" }}
+        transition={{ duration: 0.8, delay: after + 0.75, ease: "easeOut" }}
         className="mt-10 flex flex-col sm:flex-row gap-3"
       >
         <Link
@@ -50,7 +48,7 @@ export function HomeHero() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1.4, delay: AFTER_REVEAL + 1.6 }}
+        transition={{ duration: 1.4, delay: after + 1.6 }}
         className="absolute bottom-10 text-xs uppercase tracking-[0.3em] text-white/30"
         aria-hidden
       >
