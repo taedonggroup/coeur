@@ -1,0 +1,63 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 사이트 페이지 콘텐츠 (Home/About/Contact/사이트 메타).
+// 페이지별 JSON 형태로 저장해 관리자에서 자유롭게 편집한다.
+model SitePage {
+  id        String   @id @default(cuid())
+  page      String   @unique // "site" | "home" | "about" | "contact"
+  content   Json
+  updatedAt DateTime @updatedAt
+}
+
+// 포트폴리오 카드 1건.
+model Project {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  order     Int      @default(0)
+  number    String   @default("01")
+  title     String
+  category  String
+  year      String
+  location  String   @default("")
+  imageUrl  String
+  imageAlt  String   @default("")
+  href      String   @default("#")
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([order])
+  @@index([published])
+}
+
+// 문의 (Contact 폼 제출).
+enum InquiryStatus {
+  NEW
+  READ
+  REPLIED
+  ARCHIVED
+}
+
+model Inquiry {
+  id        String        @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  category  String?
+  message   String
+  status    InquiryStatus @default(NEW)
+  adminNote String?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}

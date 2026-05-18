@@ -4,9 +4,19 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { HandwritingLogo, HANDWRITING_TOTAL_S } from "./HandwritingLogo";
 
-export function HomeHero() {
-  const after = HANDWRITING_TOTAL_S; // ≈ 3.25s
+type Props = {
+  content: {
+    tagline: string;
+    subtagline: string;
+    ctaPrimaryLabel: string;
+    ctaPrimaryHref: string;
+    ctaSecondaryLabel: string;
+    ctaSecondaryHref: string;
+  };
+};
 
+export function HomeHero({ content }: Props) {
+  const after = HANDWRITING_TOTAL_S;
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-24 pb-16">
       <HandwritingLogo />
@@ -18,10 +28,10 @@ export function HomeHero() {
         className="mt-2 sm:mt-6 max-w-xl text-center"
       >
         <p className="font-display italic text-2xl sm:text-3xl text-white/85 leading-snug">
-          공간의 본질을 디자인합니다.
+          {content.tagline}
         </p>
         <p className="mt-4 text-sm sm:text-base text-white/45 leading-relaxed">
-          사람과 공간 사이, 머무는 마음을 조형하는 디자인 스튜디오.
+          {content.subtagline}
         </p>
       </motion.div>
 
@@ -32,16 +42,16 @@ export function HomeHero() {
         className="mt-10 flex flex-col sm:flex-row gap-3"
       >
         <Link
-          href="/portfolio"
+          href={content.ctaPrimaryHref}
           className="px-7 py-3 rounded-full bg-white text-black text-sm font-medium hover:bg-white/85 transition-colors"
         >
-          작업 보기
+          {content.ctaPrimaryLabel}
         </Link>
         <Link
-          href="/contact"
+          href={content.ctaSecondaryHref}
           className="px-7 py-3 rounded-full border border-white/20 text-sm text-white/90 hover:border-white/50 hover:bg-white/5 transition-colors"
         >
-          프로젝트 문의
+          {content.ctaSecondaryLabel}
         </Link>
       </motion.div>
 
