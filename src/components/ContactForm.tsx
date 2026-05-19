@@ -75,7 +75,7 @@ export function ContactForm({ labels }: Props) {
       <div>
         <label
           htmlFor="message"
-          className="block text-xs uppercase tracking-[0.2em] text-white/40 mb-2"
+          className="block text-xs uppercase tracking-[0.05em] text-white/40 mb-2"
         >
           {labels.message}
         </label>
@@ -84,7 +84,7 @@ export function ContactForm({ labels }: Props) {
           name="message"
           required
           rows={6}
-          className="w-full bg-transparent border border-white/15 rounded-sm px-4 py-3 text-sm text-white/90 placeholder:text-white/30 focus:border-white/60 focus:outline-none transition-colors resize-y"
+          className="w-full bg-transparent border border-white/15 rounded-md px-4 py-3 text-sm text-white/90 placeholder:text-white/30 focus:border-white/60 focus:outline-none transition-colors resize-y"
           placeholder="공간 / 일정 / 예산 등을 자유롭게 적어 주세요."
         />
         {state.fieldErrors?.message && (
@@ -128,7 +128,7 @@ function Field({
     <div>
       <label
         htmlFor={name}
-        className="block text-xs uppercase tracking-[0.2em] text-white/40 mb-2"
+        className="block text-xs uppercase tracking-[0.05em] text-white/40 mb-2"
       >
         {label}
       </label>
@@ -137,7 +137,7 @@ function Field({
         name={name}
         type={type}
         required={required}
-        className="w-full bg-transparent border border-white/15 rounded-sm px-4 py-3 text-sm text-white/90 placeholder:text-white/30 focus:border-white/60 focus:outline-none transition-colors"
+        className="w-full bg-transparent border border-white/15 rounded-md px-4 py-3 text-sm text-white/90 placeholder:text-white/30 focus:border-white/60 focus:outline-none transition-colors"
       />
       {error && <p className="mt-1.5 text-xs text-red-300">{error}</p>}
     </div>
@@ -159,14 +159,14 @@ function SelectField({
     <div>
       <label
         htmlFor={name}
-        className="block text-xs uppercase tracking-[0.2em] text-white/40 mb-2"
+        className="block text-xs uppercase tracking-[0.05em] text-white/40 mb-2"
       >
         {label}
       </label>
       <select
         id={name}
         name={name}
-        className="w-full bg-transparent border border-white/15 rounded-sm px-4 py-3 text-sm text-white/90 focus:border-white/60 focus:outline-none transition-colors appearance-none"
+        className="w-full bg-transparent border border-white/15 rounded-md px-4 py-3 text-sm text-white/90 focus:border-white/60 focus:outline-none transition-colors appearance-none"
         defaultValue=""
       >
         <option value="" className="bg-black">

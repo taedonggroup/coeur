@@ -47,11 +47,11 @@ export default async function PortfolioAdminPage() {
                   ) : null}
                   <div className="absolute top-3 right-3 flex gap-2">
                     {!p.published && (
-                      <span className="text-[10px] uppercase tracking-[0.18em] px-2 py-1 rounded-full bg-black/70 text-white/70 backdrop-blur">
+                      <span className="text-[10px] uppercase tracking-[0.05em] px-2 py-1 rounded-full bg-black/70 text-white/70 backdrop-blur">
                         비공개
                       </span>
                     )}
-                    <span className="text-[10px] uppercase tracking-[0.18em] px-2 py-1 rounded-full bg-black/70 text-white/70 backdrop-blur">
+                    <span className="text-[10px] uppercase tracking-[0.05em] px-2 py-1 rounded-full bg-black/70 text-white/70 backdrop-blur">
                       #{p.order}
                     </span>
                   </div>

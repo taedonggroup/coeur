@@ -17,13 +17,13 @@ export default async function ContactPage() {
           {c.eyebrow}
         </p>
         <h1 className="font-display text-5xl sm:text-6xl leading-[1.05] tracking-tight">
-          {c.heading1} <span className="italic">{c.heading2}</span>
+          {c.heading1} <span>{c.heading2}</span>
         </h1>
       </header>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-12 mb-14">
         <section>
-          <p className="text-xs uppercase tracking-[0.2em] text-white/40 mb-4">
+          <p className="text-xs uppercase tracking-[0.05em] text-white/40 mb-4">
             {c.inquiryLabel}
           </p>
           <a
@@ -38,7 +38,7 @@ export default async function ContactPage() {
         </section>
 
         <section>
-          <p className="text-xs uppercase tracking-[0.2em] text-white/40 mb-4">
+          <p className="text-xs uppercase tracking-[0.05em] text-white/40 mb-4">
             {c.studioLabel}
           </p>
           <p className="text-white/85 text-lg">{c.studioCity}</p>
@@ -47,7 +47,7 @@ export default async function ContactPage() {
       </div>
 
       <section className="border-t border-white/10 pt-12">
-        <p className="text-xs uppercase tracking-[0.2em] text-white/40 mb-6">
+        <p className="text-xs uppercase tracking-[0.05em] text-white/40 mb-6">
           문의 폼
         </p>
         <ContactForm
@@ -63,7 +63,7 @@ export default async function ContactPage() {
       </section>
 
       <section className="mt-16 border-t border-white/10 pt-12">
-        <p className="text-xs uppercase tracking-[0.2em] text-white/40 mb-4">
+        <p className="text-xs uppercase tracking-[0.05em] text-white/40 mb-4">
           Social
         </p>
         <div className="flex gap-7 text-sm">

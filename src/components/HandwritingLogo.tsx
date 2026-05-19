@@ -69,7 +69,7 @@ export function HandwritingLogo({ className = "", onComplete }: Props) {
           <g
             transform="translate(0,1024) scale(0.1,-0.1)"
             stroke="white"
-            strokeWidth={1100}
+            strokeWidth={820}
             strokeLinecap="round"
             strokeLinejoin="round"
             fill="none"

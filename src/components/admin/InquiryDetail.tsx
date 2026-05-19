@@ -39,7 +39,7 @@ export function StatusControl({
                 setCurrent(s.key);
               })
             }
-            className={`text-xs uppercase tracking-[0.18em] px-3.5 py-2 rounded-full transition-colors ${
+            className={`text-xs uppercase tracking-[0.05em] px-3.5 py-2 rounded-full transition-colors ${
               active
                 ? "bg-white text-black cursor-default"
                 : "border border-white/15 text-white/70 hover:text-white hover:border-white/40 disabled:opacity-50"

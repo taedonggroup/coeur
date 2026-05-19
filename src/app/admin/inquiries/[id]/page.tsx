@@ -55,14 +55,14 @@ export default async function InquiryDetailPage({
       </header>
 
       <section className="mb-10">
-        <p className="text-xs uppercase tracking-[0.2em] text-white/45 mb-3">
+        <p className="text-xs uppercase tracking-[0.05em] text-white/45 mb-3">
           상태
         </p>
         <StatusControl id={q.id} initial={q.status} />
       </section>
 
       <section className="mb-10">
-        <p className="text-xs uppercase tracking-[0.2em] text-white/45 mb-3">
+        <p className="text-xs uppercase tracking-[0.05em] text-white/45 mb-3">
           문의 내용
         </p>
         <div className="rounded-sm border border-white/10 bg-white/[0.02] p-5 text-sm text-white/85 leading-relaxed whitespace-pre-wrap">
@@ -71,7 +71,7 @@ export default async function InquiryDetailPage({
       </section>
 
       <section className="mb-10">
-        <p className="text-xs uppercase tracking-[0.2em] text-white/45 mb-3">
+        <p className="text-xs uppercase tracking-[0.05em] text-white/45 mb-3">
           내부 메모
         </p>
         <NoteEditor id={q.id} initial={q.adminNote} />

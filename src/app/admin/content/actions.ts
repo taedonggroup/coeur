@@ -1,5 +1,7 @@
 "use server";
 
+import { requireAdmin } from "@/lib/auth";
+
 import { updateTag, revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { DEFAULT_SITE_CONTENT } from "@/lib/content-defaults";
@@ -10,6 +12,7 @@ export async function saveContent(
   _prev: ContentSaveState,
   formData: FormData
 ): Promise<ContentSaveState> {
+  await requireAdmin();
   const page = String(formData.get("__page") ?? "");
   if (!(page in DEFAULT_SITE_CONTENT)) {
     return { ok: false, message: "알 수 없는 페이지입니다." };
@@ -24,6 +27,8 @@ export async function saveContent(
 
   for (const [key, value] of formData.entries()) {
     if (key.startsWith("__")) continue;
+    // 화이트리스트: DEFAULT_SITE_CONTENT에 정의된 키만 허용
+    if (!Object.prototype.hasOwnProperty.call(defaults, key)) continue;
     const original = defaults[key];
     const raw = String(value);
 

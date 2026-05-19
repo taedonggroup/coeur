@@ -11,7 +11,7 @@ export function LoginForm({ next }: { next: string }) {
     <form action={action} className="space-y-4">
       <input type="hidden" name="next" value={next} />
       <div>
-        <label className="block text-xs uppercase tracking-[0.2em] text-white/40 mb-2">
+        <label className="block text-xs uppercase tracking-[0.05em] text-white/40 mb-2">
           아이디
         </label>
         <input
@@ -22,7 +22,7 @@ export function LoginForm({ next }: { next: string }) {
         />
       </div>
       <div>
-        <label className="block text-xs uppercase tracking-[0.2em] text-white/40 mb-2">
+        <label className="block text-xs uppercase tracking-[0.05em] text-white/40 mb-2">
           비밀번호
         </label>
         <input

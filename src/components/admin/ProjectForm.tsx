@@ -104,7 +104,7 @@ export function ProjectForm({ initial }: { initial: ProjectInput }) {
       </div>
 
       <div>
-        <label className="block text-xs uppercase tracking-[0.2em] text-white/45 mb-2">
+        <label className="block text-xs uppercase tracking-[0.05em] text-white/45 mb-2">
           이미지
         </label>
         <ImageUpload value={imageUrl} onChange={setImageUrl} />
@@ -182,7 +182,7 @@ function Field({
     <div>
       <label
         htmlFor={name}
-        className="block text-xs uppercase tracking-[0.2em] text-white/45 mb-2"
+        className="block text-xs uppercase tracking-[0.05em] text-white/45 mb-2"
       >
         {label}
       </label>

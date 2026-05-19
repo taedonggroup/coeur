@@ -36,7 +36,7 @@ export default async function AdminDashboard() {
 
       <section>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm uppercase tracking-[0.2em] text-white/55">
+          <h2 className="text-sm uppercase tracking-[0.05em] text-white/55">
             최근 문의
           </h2>
           <Link
@@ -96,7 +96,7 @@ function Stat({
           : "border-white/10 hover:border-white/25 hover:bg-white/[0.02]"
       }`}
     >
-      <p className="text-xs uppercase tracking-[0.2em] text-white/50">{label}</p>
+      <p className="text-xs uppercase tracking-[0.05em] text-white/50">{label}</p>
       <p className="mt-2 font-display text-4xl tabular-nums">{value}</p>
     </Link>
   );
@@ -112,7 +112,7 @@ export function StatusBadge({ status }: { status: string }) {
   const m = map[status] ?? map.NEW;
   return (
     <span
-      className={`text-[10px] uppercase tracking-[0.18em] px-2.5 py-1 rounded-full whitespace-nowrap ${m.cls}`}
+      className={`text-[10px] uppercase tracking-[0.05em] px-2.5 py-1 rounded-full whitespace-nowrap ${m.cls}`}
     >
       {m.label}
     </span>

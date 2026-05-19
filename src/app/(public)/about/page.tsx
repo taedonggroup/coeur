@@ -37,7 +37,7 @@ export default async function AboutPage() {
           { label: "스튜디오", items: about.studio },
         ].map((col) => (
           <div key={col.label}>
-            <p className="text-xs uppercase tracking-[0.2em] text-white/40 mb-3">
+            <p className="text-xs uppercase tracking-[0.05em] text-white/40 mb-3">
               {col.label}
             </p>
             <ul className="space-y-1.5 text-white/80">

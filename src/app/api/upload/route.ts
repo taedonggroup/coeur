@@ -11,7 +11,6 @@ const ALLOWED = new Set([
   "image/webp",
   "image/avif",
   "image/gif",
-  "image/svg+xml",
 ]);
 
 export async function POST(req: NextRequest) {
@@ -46,7 +45,15 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const ext = file.name.split(".").pop()?.toLowerCase() || "bin";
+  // MIME → 확장자 강제 매핑 (사용자 제공 확장자 무시, .php.jpg 우회 차단)
+  const EXT_BY_MIME: Record<string, string> = {
+    "image/png": "png",
+    "image/jpeg": "jpg",
+    "image/webp": "webp",
+    "image/avif": "avif",
+    "image/gif": "gif",
+  };
+  const ext = EXT_BY_MIME[file.type] ?? "bin";
   const safeName = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
 
   const blob = await put(`uploads/${safeName}`, file, {

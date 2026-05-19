@@ -46,7 +46,7 @@ export default async function InquiriesAdminPage({
             <Link
               key={f.key}
               href={f.key === "ALL" ? "/admin/inquiries" : `/admin/inquiries?status=${f.key}`}
-              className={`text-xs uppercase tracking-[0.2em] px-3.5 py-2 rounded-full whitespace-nowrap transition-colors ${
+              className={`text-xs uppercase tracking-[0.05em] px-3.5 py-2 rounded-full whitespace-nowrap transition-colors ${
                 active
                   ? "bg-white text-black"
                   : "border border-white/15 text-white/70 hover:text-white hover:border-white/40"

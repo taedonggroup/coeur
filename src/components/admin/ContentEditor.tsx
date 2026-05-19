@@ -58,7 +58,7 @@ function FieldRow({ field }: { field: Field }) {
     <div>
       <label
         htmlFor={field.key}
-        className="block text-xs uppercase tracking-[0.2em] text-white/45 mb-2"
+        className="block text-xs uppercase tracking-[0.05em] text-white/45 mb-2"
       >
         {field.label}
         {field.isArray && (

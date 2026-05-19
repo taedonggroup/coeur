@@ -60,10 +60,18 @@ export async function verifySessionToken(
   secret: string
 ): Promise<SessionPayload | null> {
   if (!token || !secret) return null;
-  const [body, sig] = token.split(".");
+  const parts = token.split(".");
+  if (parts.length !== 2) return null;
+  const [body, sig] = parts;
   if (!body || !sig) return null;
   const expected = await sign(body, secret);
-  if (expected !== sig) return null;
+  // constant-time compare (Edge runtime 호환)
+  if (expected.length !== sig.length) return null;
+  let diff = 0;
+  for (let i = 0; i < expected.length; i++) {
+    diff |= expected.charCodeAt(i) ^ sig.charCodeAt(i);
+  }
+  if (diff !== 0) return null;
   try {
     const bytes = fromBase64Url(body);
     const payload = JSON.parse(
@@ -74,4 +82,16 @@ export async function verifySessionToken(
   } catch {
     return null;
   }
+}
+
+// Server Action 인증 가드. 미들웨어와 별개로 호출해야 한다 (미들웨어는 페이지 렌더만 막음).
+export async function requireAdmin(): Promise<SessionPayload> {
+  const { cookies } = await import("next/headers");
+  const cookieStore = await cookies();
+  const token = cookieStore.get(SESSION_COOKIE)?.value;
+  const session = await verifySessionToken(token, process.env.SESSION_SECRET ?? "");
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+  return session;
 }

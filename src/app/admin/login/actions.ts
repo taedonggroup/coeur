@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { timingSafeEqual } from "node:crypto";
 import { createSessionToken, SESSION_COOKIE } from "@/lib/auth";
 
 export type LoginState = { error?: string };
@@ -25,7 +26,20 @@ export async function login(
     };
   }
 
-  if (username !== ADMIN_USERNAME || password !== ADMIN_PASSWORD) {
+  // 길이 다를 때 즉시 reject (timingSafeEqual은 같은 길이 요구). 같은 길이로 패딩 후 비교.
+  const safeEq = (a: string, b: string) => {
+    const A = Buffer.from(a);
+    const B = Buffer.from(b);
+    if (A.length !== B.length) {
+      // 같은 길이 더미 버퍼와 비교해 시간 측정 차이 최소화
+      timingSafeEqual(A, Buffer.alloc(A.length));
+      return false;
+    }
+    return timingSafeEqual(A, B);
+  };
+  const userOk = safeEq(username, ADMIN_USERNAME);
+  const passOk = safeEq(password, ADMIN_PASSWORD);
+  if (!userOk || !passOk) {
     return { error: "아이디 또는 비밀번호가 올바르지 않습니다." };
   }
 
@@ -39,5 +53,8 @@ export async function login(
     maxAge: 60 * 60 * 24 * 7,
   });
 
-  redirect(nextPath.startsWith("/admin") ? nextPath : "/admin");
+  // open redirect 방지: /admin 로 시작 + 외부 URL 차단
+  const safeNext =
+    /^\/admin(\/[\w\-\/\[\]]*)?$/.test(nextPath) ? nextPath : "/admin";
+  redirect(safeNext);
 }

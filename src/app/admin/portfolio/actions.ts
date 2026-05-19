@@ -1,5 +1,7 @@
 "use server";
 
+import { requireAdmin } from "@/lib/auth";
+
 import { updateTag, revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -65,6 +67,7 @@ export async function createProject(
   _prev: ProjectFormState,
   formData: FormData
 ): Promise<ProjectFormState> {
+  await requireAdmin();
   const parsed = parseForm(formData);
   if (!parsed.success) {
     return {
@@ -83,7 +86,8 @@ export async function createProject(
         fieldErrors: { slug: "중복된 slug" },
       };
     }
-    return { ok: false, message: "저장 실패: " + String(e) };
+    console.error("[project] save failed", e);
+    return { ok: false, message: "저장에 실패했습니다. 잠시 후 다시 시도해 주세요." };
   }
   invalidate();
   redirect("/admin/portfolio");
@@ -94,6 +98,7 @@ export async function updateProject(
   _prev: ProjectFormState,
   formData: FormData
 ): Promise<ProjectFormState> {
+  await requireAdmin();
   const parsed = parseForm(formData);
   if (!parsed.success) {
     return {
@@ -105,13 +110,15 @@ export async function updateProject(
   try {
     await db.project.update({ where: { id }, data: parsed.data });
   } catch (e) {
-    return { ok: false, message: "저장 실패: " + String(e) };
+    console.error("[project] save failed", e);
+    return { ok: false, message: "저장에 실패했습니다. 잠시 후 다시 시도해 주세요." };
   }
   invalidate();
   return { ok: true, message: "저장되었습니다." };
 }
 
 export async function deleteProject(id: string) {
+  await requireAdmin();
   await db.project.delete({ where: { id } });
   invalidate();
   redirect("/admin/portfolio");

@@ -1,5 +1,7 @@
 "use server";
 
+import { requireAdmin } from "@/lib/auth";
+
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import type { InquiryStatus } from "@prisma/client";
@@ -7,6 +9,7 @@ import type { InquiryStatus } from "@prisma/client";
 const VALID: InquiryStatus[] = ["NEW", "READ", "REPLIED", "ARCHIVED"];
 
 export async function setStatus(id: string, status: string) {
+  await requireAdmin();
   if (!VALID.includes(status as InquiryStatus)) return;
   await db.inquiry.update({
     where: { id },
@@ -18,6 +21,7 @@ export async function setStatus(id: string, status: string) {
 }
 
 export async function saveNote(id: string, note: string) {
+  await requireAdmin();
   await db.inquiry.update({
     where: { id },
     data: { adminNote: note || null },
@@ -26,6 +30,7 @@ export async function saveNote(id: string, note: string) {
 }
 
 export async function deleteInquiry(id: string) {
+  await requireAdmin();
   await db.inquiry.delete({ where: { id } });
   revalidatePath("/admin/inquiries");
   revalidatePath("/admin");
