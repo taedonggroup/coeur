@@ -4,8 +4,10 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  // Neon: 마이그레이션은 unpooled(direct) URL 사용해야 advisory lock 작동
+  directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 // 사이트 페이지 콘텐츠 (Home/About/Contact/사이트 메타).
