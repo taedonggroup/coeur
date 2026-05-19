@@ -18,7 +18,7 @@ type Props = {
 export function HomeHero({ content }: Props) {
   const after = HANDWRITING_TOTAL_S;
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-24 pb-16">
+    <section className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-20 pb-12 sm:pt-24 sm:pb-16 gap-2 sm:gap-0">
       <HandwritingLogo />
 
       <motion.div

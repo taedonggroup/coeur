@@ -21,7 +21,7 @@ export default async function PortfolioPage() {
           {content.eyebrow}
         </p>
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5">
-          <h1 className="font-display text-5xl sm:text-6xl leading-[1.05] tracking-tight">
+          <h1 className="font-display text-5xl sm:text-6xl leading-[1.15] sm:leading-[1.05] tracking-tight">
             {content.heading1} <span className="font-display">{content.heading2}</span>
           </h1>
           <p className="text-base text-white/65 max-w-sm leading-relaxed">{content.subtitle}</p>

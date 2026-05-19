@@ -61,3 +61,15 @@ model Inquiry {
   @@index([status])
   @@index([createdAt])
 }
+
+// 로그인 시도 추적 (rate limit + 보안 감사)
+model LoginAttempt {
+  id          String   @id @default(cuid())
+  ip          String
+  ok          Boolean
+  username    String?
+  attemptedAt DateTime @default(now())
+
+  @@index([ip, attemptedAt])
+  @@index([attemptedAt])
+}

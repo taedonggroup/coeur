@@ -16,7 +16,7 @@ export default async function ContactPage() {
         <p className="text-xs uppercase tracking-[0.3em] text-white/40 mb-5">
           {c.eyebrow}
         </p>
-        <h1 className="font-display text-5xl sm:text-6xl leading-[1.05] tracking-tight">
+        <h1 className="font-display text-5xl sm:text-6xl leading-[1.15] sm:leading-[1.05] tracking-tight">
           {c.heading1} <span>{c.heading2}</span>
         </h1>
       </header>

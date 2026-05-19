@@ -51,7 +51,7 @@ export function HandwritingLogo({ className = "", onComplete }: Props) {
   return (
     <svg
       viewBox="0 0 1536 1024"
-      className={`w-full max-w-[820px] mx-auto ${className}`}
+      className={`w-full max-w-[300px] sm:max-w-[560px] md:max-w-[820px] mx-auto ${className}`}
       role="img"
       aria-label="Coeur"
       preserveAspectRatio="xMidYMid meet"
