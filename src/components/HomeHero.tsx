@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { HandwritingLogo, HANDWRITING_TOTAL_S } from "./HandwritingLogo";
+import { DisplayText } from "./DisplayText";
+import type { DisplayMap } from "@/lib/display-fields";
 
 type Props = {
   content: {
@@ -12,6 +14,7 @@ type Props = {
     ctaPrimaryHref: string;
     ctaSecondaryLabel: string;
     ctaSecondaryHref: string;
+    display?: DisplayMap;
   };
 };
 
@@ -27,12 +30,20 @@ export function HomeHero({ content }: Props) {
         transition={{ duration: 1.0, delay: after + 0.15, ease: "easeOut" }}
         className="mt-2 sm:mt-6 max-w-xl text-center"
       >
-        <p className="font-display italic text-2xl sm:text-3xl text-white/85 leading-snug">
-          {content.tagline}
-        </p>
-        <p className="mt-4 text-sm sm:text-base text-white/45 leading-relaxed">
-          {content.subtagline}
-        </p>
+        <DisplayText
+          as="p"
+          page="home"
+          field="tagline"
+          content={content}
+          className="font-display italic text-white/85 leading-snug"
+        />
+        <DisplayText
+          as="p"
+          page="home"
+          field="subtagline"
+          content={content}
+          className="mt-4 text-white/45 leading-relaxed"
+        />
       </motion.div>
 
       <motion.div

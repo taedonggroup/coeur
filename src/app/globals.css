@@ -27,7 +27,11 @@ html {
 }
 
 body {
-  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  font-family:
+    var(--font-geist-sans),
+    system-ui,
+    -apple-system,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -35,4 +39,19 @@ body {
 ::selection {
   background: rgba(255, 255, 255, 0.18);
   color: #ffffff;
+}
+
+/* 디스플레이 텍스트 — 관리자 폰트 크기(px)를 CSS 변수로 받아 반응형 적용.
+   모바일 기본, 640px(sm) 이상에서 데스크톱 크기로 전환. DisplayText 컴포넌트와 1:1.
+   line-height는 선언하지 않는다 — 이 unlayered 규칙이 Tailwind의 leading-* 유틸리티를
+   덮어쓰기 때문(HomeHero 행간 회귀 방지). line-height는 본래 상속 속성이라 부모/동일
+   요소의 leading-* 가 그대로 적용된다. */
+.display-text {
+  font-size: var(--fs-m);
+}
+
+@media (min-width: 640px) {
+  .display-text {
+    font-size: var(--fs-d);
+  }
 }

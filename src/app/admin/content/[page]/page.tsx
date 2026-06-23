@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { DEFAULT_SITE_CONTENT } from "@/lib/content-defaults";
 import { ContentEditor } from "@/components/admin/ContentEditor";
+import { getDisplayFieldDef, type DisplayMap } from "@/lib/display-fields";
 
 const LABELS: Record<string, Record<string, string>> = {
   site: {
@@ -78,13 +79,28 @@ export default async function ContentEditPage({
   )[page];
   const row = await db.sitePage.findUnique({ where: { page } });
   const current = (row?.content as Record<string, unknown>) ?? {};
+  const currentDisplay = (current.display as DisplayMap | undefined) ?? {};
 
-  const fields = Object.keys(defaults).map((key) => ({
-    key,
-    label: LABELS[page]?.[key] ?? key,
-    value: current[key] ?? defaults[key],
-    isArray: Array.isArray(defaults[key]),
-  }));
+  const fields = Object.keys(defaults).map((key) => {
+    const def = getDisplayFieldDef(page, key);
+    const setting = currentDisplay[key] ?? {};
+    return {
+      key,
+      label: LABELS[page]?.[key] ?? key,
+      value: current[key] ?? defaults[key],
+      isArray: Array.isArray(defaults[key]),
+      display: def
+        ? {
+            defaultDesktopPx: def.defaultDesktopPx,
+            defaultMobilePx: def.defaultMobilePx,
+            mobileText:
+              typeof setting.mobileText === "string" ? setting.mobileText : "",
+            fontDesktopPx: setting.fontDesktopPx ?? null,
+            fontMobilePx: setting.fontMobilePx ?? null,
+          }
+        : null,
+    };
+  });
 
   return (
     <div>

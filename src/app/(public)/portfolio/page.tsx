@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getPageContent, getProjects } from "@/lib/content";
+import { DisplayText } from "@/components/DisplayText";
 
 export async function generateMetadata(): Promise<Metadata> {
   const p = await getPageContent("portfolio");
@@ -21,10 +22,18 @@ export default async function PortfolioPage() {
           {content.eyebrow}
         </p>
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5">
-          <h1 className="font-display text-5xl sm:text-6xl leading-[1.15] sm:leading-[1.05] tracking-tight">
-            {content.heading1} <span className="font-display">{content.heading2}</span>
+          <h1 className="font-display leading-[1.15] sm:leading-[1.05] tracking-tight">
+            <DisplayText page="portfolio" field="heading1" content={content} />{" "}
+            <DisplayText
+              page="portfolio"
+              field="heading2"
+              content={content}
+              className="font-display"
+            />
           </h1>
-          <p className="text-base text-white/65 max-w-sm leading-relaxed">{content.subtitle}</p>
+          <p className="text-base text-white/65 max-w-sm leading-relaxed">
+            {content.subtitle}
+          </p>
         </div>
       </header>
 
@@ -52,7 +61,9 @@ export default async function PortfolioPage() {
               </div>
               <div className="mt-5 flex items-baseline justify-between gap-4">
                 <div className="min-w-0">
-                  <p className="text-xs tabular-nums text-white/35">{p.number}</p>
+                  <p className="text-xs tabular-nums text-white/35">
+                    {p.number}
+                  </p>
                   <h2 className="font-display text-2xl sm:text-[1.7rem] leading-tight mt-1 transition-colors group-hover:text-white text-white/90">
                     {p.title}
                   </h2>

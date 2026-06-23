@@ -6,12 +6,16 @@ import {
   type PageKey,
   type SiteContent,
 } from "./content-defaults";
+import type { DisplayMap } from "./display-fields";
 
-export type PageContent<K extends PageKey> = SiteContent[K];
+// 데스크톱/모바일 분리 + 폰트 크기 설정을 담는 보조 객체(optional).
+export type PageContent<K extends PageKey> = SiteContent[K] & {
+  display?: DisplayMap;
+};
 
 // DB가 비어 있거나 연결되지 않은 경우 디폴트 콘텐츠로 안전하게 fallback.
 export async function getPageContent<K extends PageKey>(
-  page: K
+  page: K,
 ): Promise<PageContent<K>> {
   return unstable_cache(
     async () => {
@@ -23,12 +27,15 @@ export async function getPageContent<K extends PageKey>(
           ...(row.content as object),
         } as PageContent<K>;
       } catch (err) {
-        console.warn(`[getPageContent] DB error for ${page}, using defaults`, err);
+        console.warn(
+          `[getPageContent] DB error for ${page}, using defaults`,
+          err,
+        );
         return DEFAULT_SITE_CONTENT[page];
       }
     },
     [`site-page:${page}`],
-    { tags: [`site-page:${page}`] }
+    { tags: [`site-page:${page}`] },
   )();
 }
 
@@ -81,7 +88,7 @@ export async function getProjects() {
       }
     },
     ["projects:published"],
-    { tags: ["projects"] }
+    { tags: ["projects"] },
   )();
 }
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getPageContent } from "@/lib/content";
+import { DisplayText } from "@/components/DisplayText";
 
 export async function generateMetadata(): Promise<Metadata> {
   const about = await getPageContent("about");
@@ -17,10 +18,15 @@ export default async function AboutPage() {
         <p className="text-xs uppercase tracking-[0.3em] text-white/40 mb-5">
           {about.eyebrow}
         </p>
-        <h1 className="font-display text-5xl sm:text-6xl leading-[1.15] sm:leading-[1.05] tracking-tight">
-          {about.heading1}
+        <h1 className="font-display leading-[1.15] sm:leading-[1.05] tracking-tight">
+          <DisplayText page="about" field="heading1" content={about} />
           <br />
-          <span className="italic">{about.heading2}</span>
+          <DisplayText
+            page="about"
+            field="heading2"
+            content={about}
+            className="italic"
+          />
         </h1>
       </header>
 
