@@ -31,7 +31,7 @@ export default async function PortfolioPage() {
               className="font-display"
             />
           </h1>
-          <p className="text-base text-white/65 max-w-sm leading-relaxed">
+          <p className="text-base text-white/65 max-w-sm leading-relaxed whitespace-pre-line">
             {content.subtitle}
           </p>
         </div>
@@ -77,7 +77,9 @@ export default async function PortfolioPage() {
         ))}
       </ul>
 
-      <p className="mt-20 text-sm text-white/40">{content.footnote}</p>
+      <p className="mt-20 text-sm text-white/40 whitespace-pre-line">
+        {content.footnote}
+      </p>
     </article>
   );
 }

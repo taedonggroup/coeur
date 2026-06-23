@@ -14,6 +14,7 @@ type Props = {
  * 디스플레이 텍스트 렌더 헬퍼 (서버/클라이언트 컴포넌트 모두 호환 — 훅 없음).
  * - 폰트 크기: CSS 변수(--fs-m / --fs-d)로 주입, globals.css의 .display-text가 반응형 적용
  * - 모바일 문구 오버라이드: sm:hidden / hidden sm:inline span 토글 (JS 없이)
+ * - 줄바꿈: whitespace-pre-line으로 관리자가 입력한 Enter 줄바꿈을 그대로 표시
  */
 export function DisplayText({ page, field, content, as, className }: Props) {
   const Tag = (as ?? "span") as ElementType;
@@ -24,7 +25,9 @@ export function DisplayText({ page, field, content, as, className }: Props) {
     "--fs-m": `${r.fontMobilePx}px`,
   } as CSSProperties;
 
-  const cls = ["display-text", className].filter(Boolean).join(" ");
+  const cls = ["display-text", "whitespace-pre-line", className]
+    .filter(Boolean)
+    .join(" ");
 
   if (r.mobileText) {
     return (

@@ -69,40 +69,52 @@ const labelCls = "block text-xs uppercase tracking-[0.05em] text-white/45 mb-2";
 const inputCls =
   "w-full bg-transparent border border-white/15 rounded-sm px-4 py-3 text-sm text-white/90 placeholder:text-white/30 focus:border-white/50 focus:outline-none transition-colors";
 
+// 한 줄로 유지해야 하는 칸(링크/이메일) — 줄바꿈 시 링크가 깨지므로 textarea 금지.
+const SINGLE_LINE_KEYS = new Set(["email", "socialInstagram", "socialBehance"]);
+function isSingleLineField(key: string): boolean {
+  return /href$/i.test(key) || SINGLE_LINE_KEYS.has(key);
+}
+
+// 내용 줄 수에 맞춰 textarea 높이(rows) 계산.
+function rowsFor(value: string, isArray: boolean): number {
+  const lines = (value.match(/\n/g)?.length ?? 0) + 1;
+  return isArray ? Math.max(3, lines + 1) : Math.max(2, Math.min(8, lines + 1));
+}
+
+const hintCls = "ml-2 normal-case tracking-normal text-white/35 text-[10px]";
+
 function FieldRow({ field }: { field: Field }) {
   const stringVal = field.isArray
     ? (field.value as string[]).join("\n")
     : String(field.value ?? "");
-  const isLong = field.isArray || stringVal.length > 80;
+  const singleLine = !field.isArray && isSingleLineField(field.key);
 
   return (
     <div>
       <label htmlFor={field.key} className={labelCls}>
         {field.label}
-        {field.isArray && (
-          <span className="ml-2 normal-case tracking-normal text-white/35 text-[10px]">
-            (한 줄당 한 항목)
-          </span>
-        )}
+        {field.isArray ? (
+          <span className={hintCls}>(한 줄당 한 항목)</span>
+        ) : !singleLine ? (
+          <span className={hintCls}>(Enter로 줄바꿈)</span>
+        ) : null}
       </label>
-      {isLong ? (
-        <textarea
-          id={field.key}
-          name={field.key}
-          rows={
-            field.isArray
-              ? Math.max(3, (stringVal.match(/\n/g)?.length ?? 0) + 2)
-              : 3
-          }
-          defaultValue={stringVal}
-          className={`${inputCls} resize-y font-mono leading-relaxed`}
-        />
-      ) : (
+      {singleLine ? (
         <input
           id={field.key}
           name={field.key}
           defaultValue={stringVal}
           className={inputCls}
+        />
+      ) : (
+        <textarea
+          id={field.key}
+          name={field.key}
+          rows={rowsFor(stringVal, field.isArray)}
+          defaultValue={stringVal}
+          className={`${inputCls} resize-y leading-relaxed${
+            field.isArray ? " font-mono" : ""
+          }`}
         />
       )}
     </div>
@@ -132,28 +144,29 @@ function DisplayFieldCard({
         <div>
           <label htmlFor={field.key} className={labelCls}>
             데스크톱 문구
+            <span className={hintCls}>(Enter로 줄바꿈)</span>
           </label>
-          <input
+          <textarea
             id={field.key}
             name={field.key}
+            rows={rowsFor(desktopText, false)}
             defaultValue={desktopText}
-            className={inputCls}
+            className={`${inputCls} resize-y leading-relaxed`}
           />
         </div>
 
         <div>
           <label htmlFor={`${field.key}__mobile`} className={labelCls}>
             모바일 문구
-            <span className="ml-2 normal-case tracking-normal text-white/35 text-[10px]">
-              (비우면 데스크톱 문구 사용)
-            </span>
+            <span className={hintCls}>(비우면 데스크톱 문구 사용)</span>
           </label>
-          <input
+          <textarea
             id={`${field.key}__mobile`}
             name={`__display.${field.key}.mobileText`}
+            rows={rowsFor(display.mobileText, false)}
             defaultValue={display.mobileText}
             placeholder={desktopText}
-            className={inputCls}
+            className={`${inputCls} resize-y leading-relaxed`}
           />
         </div>
 

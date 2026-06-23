@@ -43,8 +43,12 @@ export default async function ContactPage() {
           <p className="text-xs uppercase tracking-[0.05em] text-white/40 mb-4">
             {c.studioLabel}
           </p>
-          <p className="text-white/85 text-lg">{c.studioCity}</p>
-          <p className="mt-2 text-sm text-white/45">{c.studioNote}</p>
+          <p className="text-white/85 text-lg whitespace-pre-line">
+            {c.studioCity}
+          </p>
+          <p className="mt-2 text-sm text-white/45 whitespace-pre-line">
+            {c.studioNote}
+          </p>
         </section>
       </div>
 

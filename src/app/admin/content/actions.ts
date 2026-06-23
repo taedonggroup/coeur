@@ -46,7 +46,8 @@ export async function saveContent(
         .map((s) => s.trim())
         .filter((s) => s.length > 0);
     } else {
-      next[key] = raw;
+      // textarea는 \r\n으로 줄바꿈을 보내므로 \n으로 정규화 (whitespace-pre-line 표시용)
+      next[key] = raw.replace(/\r\n/g, "\n");
     }
   }
 
@@ -60,7 +61,7 @@ export async function saveContent(
     if (!isDisplayField(page, field)) continue;
 
     const setting: DisplaySetting = display[field] ?? {};
-    const raw = String(value).trim();
+    const raw = String(value).replace(/\r\n/g, "\n").trim();
 
     if (prop === "mobileText") {
       if (raw.length > 0) setting.mobileText = raw;
