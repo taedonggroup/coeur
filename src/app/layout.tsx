@@ -1,3 +1,4 @@
+import Script from "next/script";
 import type { Metadata } from "next";
 import { Geist, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
@@ -33,7 +34,20 @@ export default function RootLayout({
     >
       <body className="min-h-screen flex flex-col bg-background text-foreground">
         {children}
-      </body>
+
+        {/* ga-auto:start — site_auto가 자동 삽입 (GA4: G-JFTZC5TWPS) */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=G-JFTZC5TWPS`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga-auto" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-JFTZC5TWPS');`}
+        </Script>
+        {/* ga-auto:end */}
+        </body>
     </html>
   );
 }
