@@ -47,6 +47,12 @@ gtag('js', new Date());
 gtag('config', 'G-JFTZC5TWPS');`}
         </Script>
         {/* ga-auto:end */}
+        {/* nav-auto:start — 페이지 이동 추적 (site_auto 자동삽입) */}
+        <Script
+          src={`https://dashboard-beta-eight-76.vercel.app/api/track-js?site=coeur`}
+          strategy="afterInteractive"
+        />
+        {/* nav-auto:end */}
         </body>
     </html>
   );
