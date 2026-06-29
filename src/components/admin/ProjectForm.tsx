@@ -8,7 +8,7 @@ import {
   type ProjectFormState,
 } from "@/app/admin/portfolio/actions";
 import { ImageUpload } from "./ImageUpload";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 
 const INITIAL: ProjectFormState = { ok: false, message: "" };
 
@@ -29,9 +29,7 @@ export type ProjectInput = {
 
 export function ProjectForm({ initial }: { initial: ProjectInput }) {
   const isEdit = Boolean(initial.id);
-  const action = isEdit
-    ? updateProject.bind(null, initial.id!)
-    : createProject;
+  const action = isEdit ? updateProject.bind(null, initial.id!) : createProject;
   const [state, dispatch, pending] = useActionState(action, INITIAL);
 
   const [imageUrl, setImageUrl] = useState(initial.imageUrl);
@@ -133,11 +131,7 @@ export function ProjectForm({ initial }: { initial: ProjectInput }) {
       </label>
 
       <div className="flex items-center justify-between gap-4 pt-4 border-t border-white/10">
-        {isEdit ? (
-          <DeleteButton id={initial.id!} />
-        ) : (
-          <span />
-        )}
+        {isEdit ? <DeleteButton id={initial.id!} /> : <span />}
         <div className="flex items-center gap-4">
           {state.message && (
             <p
@@ -201,19 +195,22 @@ function Field({
 }
 
 function DeleteButton({ id }: { id: string }) {
+  // 중첩 <form> 금지(바깥 저장 form 안) — button + onClick + useTransition으로 처리.
+  // (이전엔 중첩 form이라 브라우저가 무시 → 삭제 버튼이 저장 form에 묶여 무반응이었음)
+  const [pending, start] = useTransition();
   return (
-    <form
-      action={async () => {
+    <button
+      type="button"
+      disabled={pending}
+      onClick={() => {
         if (!confirm("정말 삭제하시겠습니까? 되돌릴 수 없습니다.")) return;
-        await deleteProject(id);
+        start(async () => {
+          await deleteProject(id);
+        });
       }}
+      className="text-xs text-red-300/80 hover:text-red-300 px-3 py-2 transition-colors disabled:opacity-50"
     >
-      <button
-        type="submit"
-        className="text-xs text-red-300/80 hover:text-red-300 px-3 py-2 transition-colors"
-      >
-        삭제
-      </button>
-    </form>
+      {pending ? "삭제 중…" : "삭제"}
+    </button>
   );
 }

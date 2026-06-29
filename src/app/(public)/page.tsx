@@ -3,12 +3,7 @@ import { getPageContent } from "@/lib/content";
 
 export default async function Home() {
   const home = await getPageContent("home");
-  return (
-    <>
-      {/* 손글씨 로고 애니메이션이 빈 화면을 그리지 않도록 logo.png를 선로딩.
-          (이미지가 늦게 떠서 로고가 "툭" 나타나는 팝인 방지 — 2026-06 검토) */}
-      <link rel="preload" as="image" href="/logo.png" fetchPriority="high" />
-      <HomeHero content={home} />
-    </>
-  );
+  // 로고 팝인 방지는 HandwritingLogo가 이미지 로드 완료 후 애니메이션을 시작하는
+  // 방식으로 처리한다(preload 링크는 SVG <image>와 매칭이 안 돼 콘솔 경고가 나서 제거).
+  return <HomeHero content={home} />;
 }
