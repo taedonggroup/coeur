@@ -15,6 +15,10 @@ export const DEFAULT_SITE_CONTENT = {
     ctaPrimaryHref: "/portfolio",
     ctaSecondaryLabel: "프로젝트 문의",
     ctaSecondaryHref: "/contact",
+    // 히어로 로고 뒤 배경 이미지(공간 사진). 비우면 단색 배경으로 표시.
+    heroImage:
+      "https://0k5tddof4qirsgrn.public.blob.vercel-storage.com/uploads/1780485801537-12grl4.jpg",
+    heroImageAlt: "Coeur 스튜디오 공간",
   },
   about: {
     eyebrow: "About",
@@ -24,7 +28,12 @@ export const DEFAULT_SITE_CONTENT = {
       "Coeur는 프랑스어로 '심장' 또는 '마음의 중심'을 뜻합니다. 우리는 공간이 단순한 물리적 구조가 아니라, 그 안에 머무는 사람들의 시간과 감정을 담는 매개라고 믿습니다.",
       "주거·상업·호스피탤리티 영역에서 브랜드 정체성과 사용자 경험을 잇는 공간을 디자인합니다. 디자인은 정직해야 하고, 정직한 디자인은 오래 사랑받습니다.",
     ],
-    services: ["공간 컨설팅", "인테리어 디자인", "브랜드 공간 기획", "리노베이션"],
+    services: [
+      "공간 컨설팅",
+      "인테리어 디자인",
+      "브랜드 공간 기획",
+      "리노베이션",
+    ],
     areas: [
       "Residential · 주거",
       "Commercial · 상업",
@@ -59,7 +68,8 @@ export const DEFAULT_SITE_CONTENT = {
     formCategoryLabel: "프로젝트 분류 (선택)",
     formMessageLabel: "전하실 내용",
     formSubmitLabel: "문의 보내기",
-    formSuccessText: "문의가 정상적으로 전송되었습니다. 빠르게 회신드리겠습니다.",
+    formSuccessText:
+      "문의가 정상적으로 전송되었습니다. 빠르게 회신드리겠습니다.",
   },
 } as const;
 

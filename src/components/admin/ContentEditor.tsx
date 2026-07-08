@@ -1,11 +1,12 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import {
   saveContent,
   type ContentSaveState,
 } from "@/app/admin/content/actions";
 import { FONT_PX_MIN, FONT_PX_MAX } from "@/lib/display-fields";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 
 type DisplayConfig = {
   defaultDesktopPx: number;
@@ -20,6 +21,7 @@ type Field = {
   label: string;
   value: unknown;
   isArray: boolean;
+  isImage?: boolean;
   display?: DisplayConfig | null;
 };
 
@@ -37,7 +39,9 @@ export function ContentEditor({
     <form action={action} className="space-y-6">
       <input type="hidden" name="__page" value={page} />
       {fields.map((f) =>
-        f.display ? (
+        f.isImage ? (
+          <ImageField key={f.key} field={f} />
+        ) : f.display ? (
           <DisplayFieldCard key={f.key} field={f} display={f.display} />
         ) : (
           <FieldRow key={f.key} field={f} />
@@ -82,6 +86,30 @@ function rowsFor(value: string, isArray: boolean): number {
 }
 
 const hintCls = "ml-2 normal-case tracking-normal text-white/35 text-[10px]";
+
+// 이미지 필드: 업로드 위젯 + 실제 값을 담는 hidden input (폼 전송용).
+function ImageField({ field }: { field: Field }) {
+  const [url, setUrl] = useState(String(field.value ?? ""));
+  return (
+    <div>
+      <label className={labelCls}>
+        {field.label}
+        <span className={hintCls}>(비우면 단색 배경)</span>
+      </label>
+      <input type="hidden" name={field.key} value={url} />
+      <ImageUpload value={url} onChange={setUrl} />
+      {url && (
+        <button
+          type="button"
+          onClick={() => setUrl("")}
+          className="mt-2 text-[11px] text-white/40 hover:text-white/70 transition-colors"
+        >
+          배경 이미지 제거
+        </button>
+      )}
+    </div>
+  );
+}
 
 function FieldRow({ field }: { field: Field }) {
   const stringVal = field.isArray
