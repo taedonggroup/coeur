@@ -19,6 +19,8 @@ const LABELS: Record<string, Record<string, string>> = {
     ctaPrimaryHref: "첫 번째 버튼 링크",
     ctaSecondaryLabel: "두 번째 버튼 라벨",
     ctaSecondaryHref: "두 번째 버튼 링크",
+    heroImage: "히어로 배경 이미지 (로고 뒤 공간 사진)",
+    heroImageAlt: "히어로 배경 이미지 대체 텍스트",
   },
   about: {
     eyebrow: "상단 카테고리 라벨",
@@ -89,6 +91,8 @@ export default async function ContentEditPage({
       label: LABELS[page]?.[key] ?? key,
       value: current[key] ?? defaults[key],
       isArray: Array.isArray(defaults[key]),
+      // "...Image"로 끝나는 필드는 업로드 위젯으로 편집 (heroImageAlt는 제외)
+      isImage: /image$/i.test(key),
       display: def
         ? {
             defaultDesktopPx: def.defaultDesktopPx,
