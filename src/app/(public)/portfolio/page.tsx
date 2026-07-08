@@ -40,7 +40,7 @@ export default async function PortfolioPage() {
       <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-14 sm:gap-y-20">
         {projects.map((p, i) => (
           <li key={p.id} className={i % 2 === 1 ? "sm:mt-16" : ""}>
-            <Link href={p.href} className="group block">
+            <Link href={`/portfolio/${p.slug}`} className="group block">
               <div className="relative aspect-[4/3] overflow-hidden rounded-sm bg-white/[0.04] ring-1 ring-white/[0.06]">
                 <Image
                   src={p.imageUrl}

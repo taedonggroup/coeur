@@ -95,3 +95,34 @@ export async function getProjects() {
 export async function getAllProjectsForAdmin() {
   return db.project.findMany({ orderBy: { order: "asc" } });
 }
+
+// 공개 상세 페이지용: slug로 published 프로젝트 1건 조회 (projects 태그로 캐시).
+export async function getProjectBySlug(slug: string) {
+  return unstable_cache(
+    async () => {
+      try {
+        const row = await db.project.findUnique({ where: { slug } });
+        if (!row || !row.published) return null;
+        return row;
+      } catch (err) {
+        console.warn(`[getProjectBySlug] DB error for ${slug}`, err);
+        return null;
+      }
+    },
+    [`project:${slug}`],
+    { tags: ["projects"] },
+  )();
+}
+
+// 상세 페이지 정적 생성용 published slug 목록.
+export async function getPublishedSlugs(): Promise<string[]> {
+  try {
+    const rows = await db.project.findMany({
+      where: { published: true },
+      select: { slug: true },
+    });
+    return rows.map((r) => r.slug);
+  } catch {
+    return [];
+  }
+}
