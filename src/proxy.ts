@@ -25,6 +25,9 @@ const AI_BOTS: { re: RegExp; label: string; kind: "answer" | "crawl" }[] = [
   { re: /DuckAssistBot/i, label: "DuckDuckGo", kind: "answer" },
 ];
 const TRACK = "https://dashboard-beta-eight-76.vercel.app/api/track";
+// 안내판·지도·아이콘 같은 비콘텐츠 방문은 신고하지 않는다 — 실제 글 읽기만 집계
+const NON_CONTENT =
+  /^\/(robots\.txt|sitemap|favicon|llms|\.well-known)|\.(xml|txt|ico|png|jpe?g|webp|gif|svg|css|js|map|woff2?|ttf)$/i;
 
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -32,7 +35,7 @@ export async function proxy(req: NextRequest) {
   // AI 봇 크롤링 감지 (실패해도 무시 — 사이트엔 영향 없음)
   const ua = req.headers.get("user-agent") || "";
   const bot = AI_BOTS.find((b) => b.re.test(ua));
-  if (bot) {
+  if (bot && !NON_CONTENT.test(pathname)) {
     try {
       const ctrl = new AbortController();
       const t = setTimeout(() => ctrl.abort(), 1500);
