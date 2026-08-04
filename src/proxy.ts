@@ -2,13 +2,27 @@ import { NextRequest, NextResponse } from "next/server";
 import { SESSION_COOKIE, verifySessionToken } from "@/lib/auth";
 
 // AI 검색엔진 크롤러 감지 → 대시보드 수집구로 보고 (AEO 봇 크롤링 추적)
-const AI_BOTS: { re: RegExp; label: string }[] = [
-  { re: /GPTBot|OAI-SearchBot|ChatGPT-User/i, label: "ChatGPT" },
-  { re: /ClaudeBot|Claude-Web|anthropic-ai/i, label: "Claude" },
-  { re: /PerplexityBot/i, label: "Perplexity" },
-  { re: /Google-Extended/i, label: "Gemini" },
-  { re: /CCBot/i, label: "CommonCrawl" },
-  { re: /Bytespider|Amazonbot|cohere-ai|YouBot|Applebot-Extended|Meta-ExternalAgent/i, label: "Other" },
+// kind: "answer" = 사용자 질문에 답하려고 지금 우리 글을 여는 것(의미 큼),
+//       "crawl"  = 질문과 무관한 학습·색인용 수집. 대시보드가 이 둘을 나눠 보여준다.
+// ※ seolin-website/middleware.ts 와 목록을 맞춰 유지할 것.
+const AI_BOTS: { re: RegExp; label: string; kind: "answer" | "crawl" }[] = [
+  { re: /ChatGPT-User/i, label: "ChatGPT", kind: "answer" },
+  { re: /GPTBot|OAI-SearchBot/i, label: "ChatGPT", kind: "crawl" },
+  { re: /Claude-User/i, label: "Claude", kind: "answer" },
+  { re: /ClaudeBot|Claude-Web|Claude-SearchBot|anthropic-ai/i, label: "Claude", kind: "crawl" },
+  { re: /Perplexity-User/i, label: "Perplexity", kind: "answer" },
+  { re: /PerplexityBot/i, label: "Perplexity", kind: "crawl" },
+  { re: /Google-Extended/i, label: "Gemini", kind: "crawl" },
+  { re: /CCBot/i, label: "CommonCrawl", kind: "crawl" },
+  { re: /Bytespider|TikTokSpider/i, label: "TikTok", kind: "crawl" },
+  { re: /Amazonbot/i, label: "Amazon", kind: "crawl" },
+  { re: /Applebot-Extended/i, label: "Apple", kind: "crawl" },
+  { re: /meta-externalfetcher/i, label: "Meta", kind: "answer" },
+  { re: /meta-externalagent|FacebookBot/i, label: "Meta", kind: "crawl" },
+  { re: /cohere-ai|cohere-training-data-crawler/i, label: "Cohere", kind: "crawl" },
+  { re: /YouBot/i, label: "Youcom", kind: "crawl" },
+  { re: /MistralAI-User/i, label: "Mistral", kind: "answer" },
+  { re: /DuckAssistBot/i, label: "DuckDuckGo", kind: "answer" },
 ];
 const TRACK = "https://dashboard-beta-eight-76.vercel.app/api/track";
 
@@ -22,7 +36,7 @@ export async function proxy(req: NextRequest) {
     try {
       const ctrl = new AbortController();
       const t = setTimeout(() => ctrl.abort(), 1500);
-      await fetch(`${TRACK}?site=coeur&bot=${bot.label}`, {
+      await fetch(`${TRACK}?site=coeur&bot=${bot.label}&kind=${bot.kind}`, {
         signal: ctrl.signal,
       }).catch(() => {});
       clearTimeout(t);
