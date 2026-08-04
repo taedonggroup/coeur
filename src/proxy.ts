@@ -36,9 +36,15 @@ export async function proxy(req: NextRequest) {
     try {
       const ctrl = new AbortController();
       const t = setTimeout(() => ctrl.abort(), 1500);
-      await fetch(`${TRACK}?site=coeur&bot=${bot.label}&kind=${bot.kind}`, {
-        signal: ctrl.signal,
-      }).catch(() => {});
+      // path: 어떤 글을 읽어갔는지 / ip: 명함 위조 검증용(대시보드가 공식 IP 대역과 대조)
+      const path = encodeURIComponent(pathname);
+      const ip = encodeURIComponent(
+        (req.headers.get("x-forwarded-for") || "").split(",")[0].trim(),
+      );
+      await fetch(
+        `${TRACK}?site=coeur&bot=${bot.label}&kind=${bot.kind}&path=${path}&ip=${ip}`,
+        { signal: ctrl.signal },
+      ).catch(() => {});
       clearTimeout(t);
     } catch {}
   }
