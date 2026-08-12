@@ -24,7 +24,7 @@ const AI_BOTS: { re: RegExp; label: string; kind: "answer" | "crawl" }[] = [
   { re: /MistralAI-User/i, label: "Mistral", kind: "answer" },
   { re: /DuckAssistBot/i, label: "DuckDuckGo", kind: "answer" },
 ];
-const TRACK = "https://dashboard-beta-eight-76.vercel.app/api/track";
+const TRACK = "https://dash.taedong.ai.kr/api/track";
 // 안내판·지도·아이콘 같은 비콘텐츠 방문은 신고하지 않는다 — 실제 글 읽기만 집계
 const NON_CONTENT =
   /^\/(robots\.txt|sitemap|favicon|llms|\.well-known)|\.(xml|txt|ico|png|jpe?g|webp|gif|svg|css|js|map|woff2?|ttf)$/i;
