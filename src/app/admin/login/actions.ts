@@ -3,7 +3,7 @@
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { timingSafeEqual } from "node:crypto";
-import { createSessionToken, SESSION_COOKIE } from "@/lib/auth";
+import { createSessionToken, verifyAccountCenter, SESSION_COOKIE } from "@/lib/auth";
 import { db } from "@/lib/db";
 
 export type LoginState = { error?: string };
@@ -65,7 +65,11 @@ export async function login(
     };
   }
 
-  // 2) timing-safe 자격 비교
+  // 2) 계정센터(id.taedong.ai.kr) 우선 검증 — 이메일 형태일 때만 시도한다.
+  //    성공하면 아래 env 자격 비교를 통과한 것과 같은 취급(고객 관리자 계정 관제용).
+  const acOk = await verifyAccountCenter(username, password);
+
+  // 3) timing-safe 자격 비교
   const safeEq = (a: string, b: string) => {
     const A = Buffer.from(a);
     const B = Buffer.from(b);
@@ -78,7 +82,7 @@ export async function login(
   const userOk = safeEq(username, ADMIN_USERNAME);
   const passOk = safeEq(password, ADMIN_PASSWORD);
 
-  if (!userOk || !passOk) {
+  if (!acOk && (!userOk || !passOk)) {
     await recordAttempt(ip, username, false);
     const left = rate.remaining - 1;
     return {
@@ -89,7 +93,7 @@ export async function login(
     };
   }
 
-  // 3) 성공
+  // 4) 성공
   await recordAttempt(ip, username, true);
   const token = await createSessionToken(username, SESSION_SECRET);
   const cookieStore = await cookies();
