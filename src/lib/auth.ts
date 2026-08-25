@@ -134,8 +134,27 @@ export async function verifyAccountCenter(
 
     const kind =
       claims.acct_kind ?? (claims.user_role === "user" ? "user" : undefined);
+    if (claims.acct_status && claims.acct_status !== "active") {
+      return false;
+    }
+
+    // 전사 관리자(마스터)는 전 사이트 관리자 페이지 통과 — authgate allowed() 와 같은 규칙.
+    //  2026-08-25 대표 지시 "마스터 계정으로 고객사 관리자페이지까지 접근".
+    //  계정구조 v3: acct_kind=staff · acct_global=true · acct_role=admin · site_id=NULL.
+    if (
+      kind === "staff" &&
+      claims.acct_global === true &&
+      claims.acct_role === "admin"
+    ) {
+      return true;
+    }
+    // v2 옛 토큰 하위호환 — user_role=master 는 곧 전사 관리자.
+    if (!claims.acct_kind && claims.user_role === "master") {
+      return true;
+    }
+
     if (kind !== "user") {
-      return false; // 직원·전사 계정은 고객 관리자 페이지에 못 들어간다
+      return false; // 그 외 직원 계정은 고객 관리자 페이지에 못 들어간다
     }
     if (claims.site_id !== siteId) {
       return false; // 남의 사이트 계정 거부
