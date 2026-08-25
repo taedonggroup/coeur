@@ -95,3 +95,83 @@ export async function requireAdmin(): Promise<SessionPayload> {
   }
   return session;
 }
+
+/**
+ * 계정센터(id.taedong.ai.kr) 우선 검증 — 2026-08-25 관제 연동.
+ * 고객 관리자 계정은 계정센터 명부(admins)에서 승인·정지한다.
+ * ① GoTrue 비밀번호 검증 → ② 이 사이트(site_id)의 고객(kind=user) 계정인가 → ③ status=active 인가.
+ * 이메일 형태가 아니거나 계정센터 자격이 아니면 false — 기존 ADMIN_USERNAME/PASSWORD(env) 검증이 이어 받는다.
+ */
+export async function verifyAccountCenter(
+  id: string,
+  password: string
+): Promise<boolean> {
+  const base = process.env.AC_AUTH_URL || "https://id.taedong.ai.kr";
+  const anonKey = process.env.AC_ANON_KEY;
+  const siteId = process.env.AC_SITE_ID;
+  if (!anonKey || !siteId) return false;
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(id)) return false;
+
+  try {
+    const tokenRes = await fetch(`${base}/auth/v1/token?grant_type=password`, {
+      method: "POST",
+      headers: { apikey: anonKey, "Content-Type": "application/json" },
+      body: JSON.stringify({ email: id, password })
+    });
+    if (!tokenRes.ok) {
+      return false;
+    }
+    const { access_token: accessToken } = await tokenRes.json();
+    if (!accessToken) return false;
+
+    // JWT payload(base64url) 디코드 — Edge 런타임 호환(atob 기반)
+    const parts = accessToken.split(".");
+    const b64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+    const padded = b64 + "=".repeat((4 - (b64.length % 4)) % 4);
+    const claims = JSON.parse(
+      new TextDecoder().decode(Uint8Array.from(atob(padded), (c) => c.charCodeAt(0)))
+    );
+
+    const kind =
+      claims.acct_kind ?? (claims.user_role === "user" ? "user" : undefined);
+    if (claims.acct_status && claims.acct_status !== "active") {
+      return false;
+    }
+
+    // 전사 관리자(마스터)는 전 사이트 관리자 페이지 통과 — authgate allowed() 와 같은 규칙.
+    //  2026-08-25 대표 지시 "마스터 계정으로 고객사 관리자페이지까지 접근".
+    //  계정구조 v3: acct_kind=staff · acct_global=true · acct_role=admin · site_id=NULL.
+    if (
+      kind === "staff" &&
+      claims.acct_global === true &&
+      claims.acct_role === "admin"
+    ) {
+      return true;
+    }
+    // v2 옛 토큰 하위호환 — user_role=master 는 곧 전사 관리자.
+    if (!claims.acct_kind && claims.user_role === "master") {
+      return true;
+    }
+
+    if (kind !== "user") {
+      return false; // 그 외 직원 계정은 고객 관리자 페이지에 못 들어간다
+    }
+    if (claims.site_id !== siteId) {
+      return false; // 남의 사이트 계정 거부
+    }
+
+    const statusRes = await fetch(
+      `${base}/rest/v1/admins?select=status&user_id=eq.${encodeURIComponent(String(claims.sub))}`,
+      { headers: { apikey: anonKey, Authorization: `Bearer ${accessToken}` } }
+    );
+    if (!statusRes.ok) {
+      return false;
+    }
+    const rows = await statusRes.json();
+    return (
+      Array.isArray(rows) && rows.length > 0 && rows[0].status === "active"
+    );
+  } catch {
+    return false; // 계정센터가 안 보여도 기존 로그인은 살아 있어야 한다
+  }
+}
