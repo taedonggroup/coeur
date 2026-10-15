@@ -1,0 +1,97 @@
+/* Coeur 관리자 로그인 — 태동 통일 로그인 모양 (2026-10-15).
+   값의 원본: jarvis srv projects/accounts/web/public/login.css (tl- 이름 그대로 옮김).
+   원본이 바뀌면 여기도 같이 맞춘다. 로그인 처리(actions.ts·auth.ts)와는 무관한 모양 파일이다.
+   - 사이트는 어두운 테마지만 이 화면만 항상 밝게 둔다.
+   - 관리자 레이아웃(admin/layout.tsx)이 이 화면도 감싸므로, 로그인 화면일 때만 상단 메뉴와
+     어두운 바탕을 :has(.tl-wrap) 로 가린다. 레이아웃 파일은 건드리지 않는다.
+   - Next 는 페이지에서 불러온 CSS 를 다른 화면으로 옮겨도 남겨 두므로, 모든 규칙은
+     tl- 이름이나 :has(.tl-wrap) 안에서만 걸리게 한다. */
+
+@font-face {
+  font-family: "Pretendard Variable";
+  src: url("https://id.taedong.ai.kr/fonts/PretendardVariable.woff2") format("woff2-variations");
+  font-weight: 45 920;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 관리자 레이아웃 덮기 — 이 화면에서만 */
+html:has(.tl-wrap),
+body:has(.tl-wrap) { background: #fff; color-scheme: light; }
+div:has(> main > .tl-wrap) { background: #fff; }
+div:has(> main > .tl-wrap) > header { display: none; }
+main:has(> .tl-wrap) { max-width: none; margin: 0; padding: 0; }
+
+.tl-wrap {
+  min-height: 100svh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 48px 24px 64px;
+  background: #fff; color: #0b0e16; color-scheme: light;
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Segoe UI", sans-serif;
+  letter-spacing: -0.01em;
+  word-break: keep-all; overflow-wrap: anywhere;
+  -webkit-font-smoothing: antialiased;
+}
+/* 사이트 전역 ::selection 이 흰 글자라 밝은 바탕에서 안 보인다 — 이 화면만 남색으로 */
+.tl-wrap ::selection { background: rgb(22 48 107 / .18); color: #0b0e16; }
+.tl-box { width: 100%; max-width: 360px; }
+.tl-logo { display: block; width: 196px; max-width: 100%; height: auto; margin: 0 auto; background: none; }
+/* 어느 사이트 관리자로 들어가는지 — 로고 바로 아래 작게 */
+.tl-service { margin: 12px 0 0; text-align: center; font-size: 13px; line-height: 1.5; color: rgb(11 14 22 / .66); }
+.tl-form { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; margin-top: 40px; }
+
+/* 칸 — 높이 56 · 완전 둥근 · 남색 14% 테두리 · 누르면 남색 테두리 */
+.tl-field { position: relative; }
+.tl-input {
+  box-sizing: border-box; display: block;
+  width: 100%; height: 56px; margin: 0;
+  border: 1px solid rgb(22 48 107 / .14); border-radius: 9999px;
+  background: transparent;
+  padding: 24px 24px 8px;
+  font: inherit; font-size: 15px; line-height: 1.2; color: #0b0e16;
+  outline: none; -webkit-appearance: none; appearance: none;
+  transition: border-color .15s ease;
+}
+.tl-input:hover { border-color: rgb(11 14 22 / .3); }
+.tl-input:focus { border-color: #16306b; }
+.tl-input.tl-has-eye { padding-right: 56px; }
+/* 떠오르는 라벨 — 빈 칸이면 가운데 15px, 누르거나 글자가 들어가면(자동완성 포함) 왼쪽 위 11px.
+   빈 칸 판정에 placeholder=" " 가 필요하다. 라벨은 반드시 입력칸 바로 뒤에 둔다(+ 선택자). */
+.tl-label {
+  pointer-events: none; position: absolute; left: 24px; top: 50%; transform: translateY(-50%);
+  font-size: 15px; line-height: 1; color: rgb(11 14 22 / .66);
+  transition: top .2s ease-out, transform .2s ease-out, font-size .2s ease-out;
+}
+.tl-input:focus + .tl-label,
+.tl-input:not(:placeholder-shown) + .tl-label,
+.tl-input:-webkit-autofill + .tl-label { top: 10px; transform: none; font-size: 11px; font-weight: 500; }
+@media (prefers-reduced-motion: reduce) { .tl-label { transition: none; } }
+
+/* 비밀번호 보기 — 눈 아이콘(보기) / 사선 그은 눈(숨기기) */
+.tl-eye {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  display: grid; place-items: center; width: 40px; height: 40px; padding: 0;
+  border: 0; border-radius: 9999px; background: none; color: rgb(11 14 22 / .66); cursor: pointer;
+  transition: color .15s ease;
+}
+.tl-eye:hover { color: #0b0e16; }
+.tl-eye .tl-eye-off { display: none; }
+.tl-eye[aria-pressed="true"] .tl-eye-off { display: inline; }
+
+/* 주 버튼 — 올리거나 누르면 한 단계 짙게 */
+.tl-btn {
+  display: block; width: 100%; height: 56px; margin: 8px 0 0;
+  border: 0; border-radius: 9999px; padding: 0 24px;
+  background: #16306b; color: #fff;
+  font: inherit; font-size: 15px; font-weight: 700; cursor: pointer;
+  transition: background-color .15s ease, transform .15s ease;
+}
+.tl-btn:hover, .tl-btn:active { background: #0e1c3e; }
+.tl-btn:active { transform: scale(.98); }
+.tl-btn:disabled { opacity: .5; cursor: default; transform: none; }
+.tl-btn:focus-visible, .tl-eye:focus-visible { outline: 2px solid #16306b; outline-offset: 2px; }
+
+/* 오류 — 빨간 상자 대신 굵은 글자 한 줄 */
+.tl-error { margin: 0; padding: 0 24px; font-size: 14px; line-height: 1.5; font-weight: 700; color: #0b0e16; }
+
+.tl-sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
